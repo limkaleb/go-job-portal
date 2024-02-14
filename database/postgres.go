@@ -21,7 +21,7 @@ func Connect() {
 	}
 
 	log.Println("Running Migrations")
-	DB.AutoMigrate(&models.Employer{}, &models.Talent{})
+	DB.AutoMigrate(&models.Employer{}, &models.Talent{}, &models.Job{}, &models.Application{})
 	
 	log.Println("Connected Successfully to the Database")
 }

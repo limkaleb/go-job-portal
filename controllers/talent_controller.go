@@ -11,7 +11,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func RegisterEmployer(c *fiber.Ctx) error {
+func RegisterTalent(c *fiber.Ctx) error {
 	var data map[string]string
 	if err := c.BodyParser(&data); err != nil {
 		return err
@@ -19,7 +19,7 @@ func RegisterEmployer(c *fiber.Ctx) error {
 
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 	now := time.Now()
-	employer := models.Employer{
+	talent := models.Talent{
 		Name: data["name"],
 		Email: data["email"],
 		Password: password,
@@ -27,7 +27,7 @@ func RegisterEmployer(c *fiber.Ctx) error {
 		UpdatedAt: now,
 	}
 
-	result := database.DB.Create(&employer)
+	result := database.DB.Create(&talent)
 
 	if result.Error != nil && strings.Contains(result.Error.Error(), "duplicate key value violates unique") {
 		return c.Status(fiber.StatusConflict).JSON(fiber.Map{"status": "fail", "message": "Email already exist!"})
@@ -35,17 +35,17 @@ func RegisterEmployer(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": result.Error.Error()})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"employer": employer}})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"talent": talent}})
 }
 
-func LoginEmployer(c *fiber.Ctx) error {
+func LoginTalent(c *fiber.Ctx) error {
 	var data map[string]string
 
 	if err := c.BodyParser(&data); err != nil {
 		return err
 	}
 
-	var user models.Employer
+	var user models.Talent
 
 	database.DB.Where("email = ?", data["email"]).First(&user)
 
@@ -89,7 +89,8 @@ func LoginEmployer(c *fiber.Ctx) error {
 	})
 }
 
-func LogoutEmployer(c *fiber.Ctx) error {
+
+func LogoutTalent(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
 		Name:     "jwt",
 		Value:    "",
@@ -103,7 +104,7 @@ func LogoutEmployer(c *fiber.Ctx) error {
 	})
 }
 
-func GetEmployer(c *fiber.Ctx) error {
+func GetTalent(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	return c.JSON(user)
 }

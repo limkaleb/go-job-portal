@@ -1,9 +1,8 @@
 package controllers
 
 import (
-	"go-job-portal/models"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/limkaleb/go-job-portal/models"
 	"golang.org/x/crypto/bcrypt"
 )
 

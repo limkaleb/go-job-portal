@@ -1,9 +1,8 @@
 package routes
 
 import (
-	"go-job-portal/controllers"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/limkaleb/go-job-portal/controllers"
 )
 
 func Setup(app *fiber.App) {

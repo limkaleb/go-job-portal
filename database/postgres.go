@@ -1,8 +1,7 @@
 package database
 
 import (
-	"go-job-portal/models"
-
+	"github.com/limkaleb/go-job-portal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

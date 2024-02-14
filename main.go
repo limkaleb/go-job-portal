@@ -1,10 +1,9 @@
 package main
 
 import (
-	"go-job-portal/database"
-	"go-job-portal/routes"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/limkaleb/go-job-portal/database"
+	"github.com/limkaleb/go-job-portal/routes"
 )
 
 func main() {

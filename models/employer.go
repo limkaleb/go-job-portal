@@ -1,9 +1,14 @@
 package models
 
-type Employer struct {
-	Id       uint
-	Name     string
-	Email    string `gorm:"unique"`
-	Password []byte
-}
+import (
+	"time"
+)
 
+type Employer struct {
+	ID        uint      `gorm:"primaryKey" json:"id,omitempty"`
+	Name      string    `json:"name,omitempty"`
+	Email     string    `gorm:"unique" json:"email,omitempty"`
+	Password  []byte    `json:"password,omitempty"`
+	CreatedAt time.Time `gorm:"not null" json:"createdAt,omitempty"`
+	UpdatedAt time.Time `gorm:"not null" json:"updatedAt,omitempty"`
+}

@@ -34,7 +34,25 @@ func PostJob(c *fiber.Ctx) error {
 }
 
 // Get jobs
+func GetJobs(c *fiber.Ctx) error {
+	var jobs []models.Job
 
-// Update Job
+	database.DB.Find(&jobs)
 
-// Delete Job
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"jobs": jobs}})
+}
+
+func GetJobsByEmployer(c *fiber.Ctx) error {
+	user := c.Locals("user").(models.Employer)
+
+	var jobs []models.Job
+
+	database.DB.Preload("Applications").Where("employer_id = ?", user.ID).Find(&jobs)
+
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"jobs": jobs}})
+}
+
+
+// Update job
+
+// Delete job

@@ -103,6 +103,18 @@ func LogoutEmployer(c *fiber.Ctx) error {
 	})
 }
 
+// GetEmployer Get Employer
+//
+//	@Summary		Get employer data
+//	@Description	Get employer data
+//	@Tags			example
+//	@Accept			json
+//	@Produce		plain
+//	@Success		200	{string}	string	"pong"
+//	@Failure		400	{string}	string	"ok"
+//	@Failure		404	{string}	string	"ok"
+//	@Failure		500	{string}	string	"ok"
+//	@Router			/examples/ping [get]
 func GetEmployer(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	return c.JSON(user)

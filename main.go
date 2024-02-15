@@ -9,6 +9,10 @@ import (
 	"github.com/limkaleb/go-job-portal/routes"
 )
 
+//	@title			Job Portal API
+//	@version		1.0
+//	@description	This is a very simple job portal API
+//	@termsOfService	http://swagger.io/terms/
 func main() {
 	database.Connect()
 	app := fiber.New()

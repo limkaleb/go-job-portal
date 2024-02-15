@@ -9,6 +9,13 @@ import (
 )
 
 func Setup(app *fiber.App) {	
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"status":  "success",
+			"message": "Welcome to Job Portal API",
+		})
+	})
+	
 	// Employer routes
 	app.Post("/api/employer/register", controllers.RegisterEmployer)
 	app.Post("/api/employer/login", controllers.LoginEmployer)

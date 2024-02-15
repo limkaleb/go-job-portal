@@ -16,45 +16,164 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/examples/ping": {
+        "/api/applications": {
             "get": {
-                "description": "do ping",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "text/plain"
-                ],
+                "description": "Talent get applications",
                 "tags": [
-                    "example"
+                    "Talent"
                 ],
-                "summary": "ping example",
-                "responses": {
-                    "200": {
-                        "description": "pong",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "ok",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "ok",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "ok",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
+                "summary": "Talent get applications",
+                "responses": {}
+            }
+        },
+        "/api/applications/{id}": {
+            "get": {
+                "description": "Talent get application by id",
+                "tags": [
+                    "Talent"
+                ],
+                "summary": "Talent get application by id",
+                "responses": {}
+            }
+        },
+        "/api/employer": {
+            "get": {
+                "description": "Get employer data",
+                "tags": [
+                    "Employer"
+                ],
+                "summary": "Get employer data",
+                "responses": {}
+            }
+        },
+        "/api/employer/applications": {
+            "get": {
+                "description": "Employer get applications",
+                "tags": [
+                    "Employer"
+                ],
+                "summary": "Employer get applications",
+                "responses": {}
+            }
+        },
+        "/api/employer/applications/{id}": {
+            "put": {
+                "description": "Employer update application status",
+                "tags": [
+                    "Employer"
+                ],
+                "summary": "Employer update application",
+                "responses": {}
+            }
+        },
+        "/api/employer/jobs": {
+            "get": {
+                "description": "Employer get jobs",
+                "tags": [
+                    "Employer"
+                ],
+                "summary": "Employer get jobs",
+                "responses": {}
+            }
+        },
+        "/api/employer/login": {
+            "post": {
+                "description": "Login employer",
+                "tags": [
+                    "Employer"
+                ],
+                "summary": "Login employer",
+                "responses": {}
+            }
+        },
+        "/api/employer/logout": {
+            "post": {
+                "description": "Get employer data",
+                "tags": [
+                    "Employer"
+                ],
+                "summary": "Logout employer",
+                "responses": {}
+            }
+        },
+        "/api/employer/register": {
+            "post": {
+                "description": "Register employer",
+                "tags": [
+                    "Employer"
+                ],
+                "summary": "Register employer",
+                "responses": {}
+            }
+        },
+        "/api/job": {
+            "post": {
+                "description": "Employer post new job",
+                "tags": [
+                    "Employer"
+                ],
+                "summary": "Employer post job",
+                "responses": {}
+            }
+        },
+        "/api/job/{job_id}/apply": {
+            "post": {
+                "description": "Apply job",
+                "tags": [
+                    "Talent"
+                ],
+                "summary": "Apply Job",
+                "responses": {}
+            }
+        },
+        "/api/jobs": {
+            "get": {
+                "description": "Get all jobs",
+                "tags": [
+                    "Talent"
+                ],
+                "summary": "Get all jobs",
+                "responses": {}
+            }
+        },
+        "/api/talent": {
+            "get": {
+                "description": "Get talent data",
+                "tags": [
+                    "Talent"
+                ],
+                "summary": "Get talent data",
+                "responses": {}
+            }
+        },
+        "/api/talent/login": {
+            "post": {
+                "description": "Login talent",
+                "tags": [
+                    "Talent"
+                ],
+                "summary": "Login talent",
+                "responses": {}
+            }
+        },
+        "/api/talent/logout": {
+            "post": {
+                "description": "Get talent data",
+                "tags": [
+                    "Talent"
+                ],
+                "summary": "Logout talent",
+                "responses": {}
+            }
+        },
+        "/api/talent/register": {
+            "post": {
+                "description": "Register talent",
+                "tags": [
+                    "Talent"
+                ],
+                "summary": "Register talent",
+                "responses": {}
             }
         }
     }
@@ -67,7 +186,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Job Portal API",
-	Description:      "This is a very simple job portal API",
+	Description:      "This is a simple job portal API",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

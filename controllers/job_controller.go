@@ -9,6 +9,11 @@ import (
 	"github.com/limkaleb/go-job-portal/models"
 )
 
+// 	PostJob	Employer post job
+//	@Summary		Employer post job
+//	@Tags			Employer
+//	@Description	Employer post new job
+//	@Router			/api/job [post]
 func PostJob(c *fiber.Ctx) error {
 	var data map[string]string
 	if err := c.BodyParser(&data); err != nil {
@@ -33,7 +38,11 @@ func PostJob(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"job": newJob}})
 }
 
-// Get jobs
+// 	GetJobs	Get all jobs
+//	@Summary		Get all jobs
+//	@Tags			Talent
+//	@Description	Get all jobs
+//	@Router			/api/jobs [get]
 func GetJobs(c *fiber.Ctx) error {
 	var jobs []models.Job
 
@@ -42,6 +51,11 @@ func GetJobs(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"jobs": jobs}})
 }
 
+// 	GetJobsByEmployer	Employer get jobs
+//	@Summary		Employer get jobs
+//	@Tags			Employer
+//	@Description	Employer get jobs
+//	@Router			/api/employer/jobs [get]
 func GetJobsByEmployer(c *fiber.Ctx) error {
 	user := c.Locals("user").(models.Employer)
 
@@ -53,6 +67,6 @@ func GetJobsByEmployer(c *fiber.Ctx) error {
 }
 
 
-// Update job
+// TODO: Update job
 
-// Delete job
+// TODO: Delete job

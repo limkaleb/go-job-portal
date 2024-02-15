@@ -11,6 +11,11 @@ import (
 	"github.com/limkaleb/go-job-portal/models"
 )
 
+//	ApplyJob	Apply Job
+//	@Summary		Apply Job
+//	@Tags			Talent
+//	@Description	Apply job
+//	@Router			/api/job/{job_id}/apply [post]
 func ApplyJob(c *fiber.Ctx) error {
 	jobId, _ := strconv.Atoi(c.Params("job_id"))
 	user := c.Locals("user").(models.Talent)
@@ -29,6 +34,11 @@ func ApplyJob(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"application": newApplication}})
 }
 
+// 	GetApplications	Talent get applications
+//	@Summary		Talent get applications
+//	@Tags			Talent
+//	@Description	Talent get applications
+//	@Router			/api/applications [get]
 func GetApplications(c *fiber.Ctx) error {
 	user := c.Locals("user").(models.Talent)
 
@@ -39,6 +49,11 @@ func GetApplications(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"applications": applications}})
 }
 
+// 	GetApplicationsById	Talent get application by id
+//	@Summary		Talent get application by id
+//	@Tags			Talent
+//	@Description	Talent get application by id
+//	@Router			/api/applications/{id} [get]
 func GetApplicationsById(c *fiber.Ctx) error {
 	user := c.Locals("user").(models.Talent)
 	appId, _ := strconv.Atoi(c.Params("id"))
@@ -50,7 +65,11 @@ func GetApplicationsById(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"application": application}})
 }
 
-
+// 	GetApplicationsByEmployer	Employer get applications
+//	@Summary		Employer get applications
+//	@Tags			Employer
+//	@Description	Employer get applications
+//	@Router			/api/employer/applications [get]
 func GetApplicationsByEmployer(c *fiber.Ctx) error {
 	user := c.Locals("user").(models.Employer)
 
@@ -66,7 +85,11 @@ func GetApplicationsByEmployer(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"applications": applications}})
 }
 
-
+// 	UpdateApplicationByEmployer	Employer update application
+//	@Summary		Employer update application
+//	@Tags			Employer
+//	@Description	Employer update application status
+//	@Router			/api/employer/applications/{id} [put]
 func UpdateApplicationByEmployer(c *fiber.Ctx) error {
 	user := c.Locals("user").(models.Employer)
 	appId, _ := strconv.Atoi(c.Params("id"))

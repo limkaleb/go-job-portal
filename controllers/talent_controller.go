@@ -11,6 +11,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// 	RegisterTalent	Register Talent
+//	@Summary		Register talent
+//	@Tags			Talent
+//	@Description	Register talent
+//	@Router			/api/talent/register [post]
 func RegisterTalent(c *fiber.Ctx) error {
 	var data map[string]string
 	if err := c.BodyParser(&data); err != nil {
@@ -38,6 +43,11 @@ func RegisterTalent(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"talent": talent}})
 }
 
+// 	LoginTalent	Login Talent
+//	@Summary		Login talent
+//	@Tags			Talent
+//	@Description	Login talent
+//	@Router			/api/talent/login [post]
 func LoginTalent(c *fiber.Ctx) error {
 	var data map[string]string
 
@@ -89,7 +99,11 @@ func LoginTalent(c *fiber.Ctx) error {
 	})
 }
 
-
+// 	LogoutTalent	Logout Talent
+//	@Summary		Logout talent
+//	@Tags			Talent
+//	@Description	Get talent data
+//	@Router			/api/talent/logout [post]
 func LogoutTalent(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
 		Name:     "jwt",
@@ -104,6 +118,11 @@ func LogoutTalent(c *fiber.Ctx) error {
 	})
 }
 
+// 	GetTalent Get Talent
+//	@Summary		Get talent data
+//	@Tags			Talent
+//	@Description	Get talent data
+//	@Router			/api/talent [get]
 func GetTalent(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	return c.JSON(user)

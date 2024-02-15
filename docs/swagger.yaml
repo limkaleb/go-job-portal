@@ -1,35 +1,120 @@
 info:
   contact: {}
-  description: This is a very simple job portal API
+  description: This is a simple job portal API
   termsOfService: http://swagger.io/terms/
   title: Job Portal API
   version: "1.0"
 paths:
-  /examples/ping:
+  /api/applications:
     get:
-      consumes:
-      - application/json
-      description: do ping
-      produces:
-      - text/plain
-      responses:
-        "200":
-          description: pong
-          schema:
-            type: string
-        "400":
-          description: ok
-          schema:
-            type: string
-        "404":
-          description: ok
-          schema:
-            type: string
-        "500":
-          description: ok
-          schema:
-            type: string
-      summary: ping example
+      description: Talent get applications
+      responses: {}
+      summary: Talent get applications
       tags:
-      - example
+      - Talent
+  /api/applications/{id}:
+    get:
+      description: Talent get application by id
+      responses: {}
+      summary: Talent get application by id
+      tags:
+      - Talent
+  /api/employer:
+    get:
+      description: Get employer data
+      responses: {}
+      summary: Get employer data
+      tags:
+      - Employer
+  /api/employer/applications:
+    get:
+      description: Employer get applications
+      responses: {}
+      summary: Employer get applications
+      tags:
+      - Employer
+  /api/employer/applications/{id}:
+    put:
+      description: Employer update application status
+      responses: {}
+      summary: Employer update application
+      tags:
+      - Employer
+  /api/employer/jobs:
+    get:
+      description: Employer get jobs
+      responses: {}
+      summary: Employer get jobs
+      tags:
+      - Employer
+  /api/employer/login:
+    post:
+      description: Login employer
+      responses: {}
+      summary: Login employer
+      tags:
+      - Employer
+  /api/employer/logout:
+    post:
+      description: Get employer data
+      responses: {}
+      summary: Logout employer
+      tags:
+      - Employer
+  /api/employer/register:
+    post:
+      description: Register employer
+      responses: {}
+      summary: Register employer
+      tags:
+      - Employer
+  /api/job:
+    post:
+      description: Employer post new job
+      responses: {}
+      summary: Employer post job
+      tags:
+      - Employer
+  /api/job/{job_id}/apply:
+    post:
+      description: Apply job
+      responses: {}
+      summary: Apply Job
+      tags:
+      - Talent
+  /api/jobs:
+    get:
+      description: Get all jobs
+      responses: {}
+      summary: Get all jobs
+      tags:
+      - Talent
+  /api/talent:
+    get:
+      description: Get talent data
+      responses: {}
+      summary: Get talent data
+      tags:
+      - Talent
+  /api/talent/login:
+    post:
+      description: Login talent
+      responses: {}
+      summary: Login talent
+      tags:
+      - Talent
+  /api/talent/logout:
+    post:
+      description: Get talent data
+      responses: {}
+      summary: Logout talent
+      tags:
+      - Talent
+  /api/talent/register:
+    post:
+      description: Register talent
+      responses: {}
+      summary: Register talent
+      tags:
+      - Talent
 swagger: "2.0"

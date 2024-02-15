@@ -11,6 +11,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// 	RegisterEmployer	Register Employer
+//	@Summary		Register employer
+//	@Tags			Employer
+//	@Description	Register employer
+//	@Router			/api/employer/register [post]
 func RegisterEmployer(c *fiber.Ctx) error {
 	var data map[string]string
 	if err := c.BodyParser(&data); err != nil {
@@ -20,9 +25,9 @@ func RegisterEmployer(c *fiber.Ctx) error {
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 	now := time.Now()
 	employer := models.Employer{
-		Name: data["name"],
-		Email: data["email"],
-		Password: password,
+		Name:      data["name"],
+		Email:     data["email"],
+		Password:  password,
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
@@ -38,6 +43,11 @@ func RegisterEmployer(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"employer": employer}})
 }
 
+// 	LoginEmployer	Login Employer
+//	@Summary		Login employer
+//	@Tags			Employer
+//	@Description	Login employer
+//	@Router			/api/employer/login [post]
 func LoginEmployer(c *fiber.Ctx) error {
 	var data map[string]string
 
@@ -63,10 +73,10 @@ func LoginEmployer(c *fiber.Ctx) error {
 		})
 	}
 
-	 // Create the Claims
-	 claims := jwt.MapClaims{
-		"iss":  user.Email,
-		"exp":   time.Now().Add(time.Hour * 24).Unix(), // 1 day
+	// Create the Claims
+	claims := jwt.MapClaims{
+		"iss": user.Email,
+		"exp": time.Now().Add(time.Hour * 24).Unix(), // 1 day
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -74,7 +84,7 @@ func LoginEmployer(c *fiber.Ctx) error {
 	t, err := token.SignedString([]byte("secret"))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Could not login"})
-}
+	}
 
 	cookie := fiber.Cookie{
 		Name:     "jwt",
@@ -89,6 +99,11 @@ func LoginEmployer(c *fiber.Ctx) error {
 	})
 }
 
+// 	LogoutEmployer	Logout Employer
+//	@Summary		Logout employer
+//	@Tags			Employer
+//	@Description	Get employer data
+//	@Router			/api/employer/logout [post]
 func LogoutEmployer(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
 		Name:     "jwt",
@@ -103,18 +118,11 @@ func LogoutEmployer(c *fiber.Ctx) error {
 	})
 }
 
-// GetEmployer Get Employer
-//
+// 	GetEmployer Get Employer
 //	@Summary		Get employer data
+//	@Tags			Employer
 //	@Description	Get employer data
-//	@Tags			example
-//	@Accept			json
-//	@Produce		plain
-//	@Success		200	{string}	string	"pong"
-//	@Failure		400	{string}	string	"ok"
-//	@Failure		404	{string}	string	"ok"
-//	@Failure		500	{string}	string	"ok"
-//	@Router			/examples/ping [get]
+//	@Router			/api/employer [get]
 func GetEmployer(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	return c.JSON(user)

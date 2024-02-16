@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"strings"
 	"time"
 
@@ -79,8 +78,6 @@ func LoginEmployer(c *fiber.Ctx) error {
 
 	var user models.Employer
 	database.DB.Where("email = ?", data["email"]).First(&user)
-
-	fmt.Println("usrrR: ", user.ID)
 
 	if user.ID == 0 {
 		c.Status(fiber.StatusNotFound)

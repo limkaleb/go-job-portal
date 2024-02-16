@@ -39,4 +39,5 @@ JWT tokens generated every time user login and stored inside cookies. It will be
 ### TODO:
 
 - Create config file to store environment parameters
+- Add validations
 - Add unit tests

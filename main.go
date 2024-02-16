@@ -10,10 +10,15 @@ import (
 	"github.com/limkaleb/go-job-portal/routes"
 )
 
-//	@title			Job Portal API
-//	@version		1.0
-//	@description	This is a simple job portal API
-//	@termsOfService	http://swagger.io/terms/
+// @title			Job Portal API
+// @version		1.0
+// @description	The Simple Job Portal is an API-based platform designed to connect job seekers (talents)
+//
+//	with employers. It provides two distinct user flows: one for talents to search and apply for
+//	jobs, and another for employers to post jobs, review applications, and manage the hiring
+//	process.
+//
+// @termsOfService	http://swagger.io/terms/
 func main() {
 	database.Connect()
 	app := fiber.New()
@@ -24,7 +29,7 @@ func main() {
 	}))
 
 	app.Use(csrf.New())
-	
+
 	app.Use(logger.New())
 
 	app.Use(jwtware.New(jwtware.Config{

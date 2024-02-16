@@ -9,10 +9,16 @@ import (
 	"github.com/limkaleb/go-job-portal/models"
 )
 
-// 	PostJob	Employer post job
-//	@Summary		Employer post job
+// 	PostJob	Post job for employer
+//	@Summary		Post job for employer
 //	@Tags			Employer
-//	@Description	Employer post new job
+//	@Description	This endpoint is used for employer to post a new job. Employer must be authenticated to perform this action.
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		models.PostJobRequest	true	"Post job request for employer"
+//	@Success		201		{object}	models.PostJobResponse
+//	@Failure		401		{string}	message	"Unauthenticated"
+//	@Failure		404		{string}	message	"User not found"
 //	@Router			/api/job [post]
 func PostJob(c *fiber.Ctx) error {
 	var data map[string]string
@@ -35,26 +41,32 @@ func PostJob(c *fiber.Ctx) error {
 	}
 	database.DB.Create(&newJob)
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"job": newJob}})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"data": fiber.Map{"job": newJob}})
 }
 
 // 	GetJobs	Get all jobs
 //	@Summary		Get all jobs
 //	@Tags			Talent
-//	@Description	Get all jobs
+//	@Description	This endpoint is used for talent to fetch all jobs posted. No authentication needed to perform this action.
+//	@Produce		json
+//	@Success		200	{array}	models.Job
 //	@Router			/api/jobs [get]
 func GetJobs(c *fiber.Ctx) error {
 	var jobs []models.Job
 
 	database.DB.Find(&jobs)
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"jobs": jobs}})
+	return c.JSON(fiber.Map{"data": fiber.Map{"jobs": jobs}})
 }
 
 // 	GetJobsByEmployer	Employer get jobs
 //	@Summary		Employer get jobs
 //	@Tags			Employer
-//	@Description	Employer get jobs
+//	@Description	This endpoint is used for employer to fetch all jobs he/she posted. Authentication needed to perform this action.
+//	@Produce		json
+//	@Success		200	{array}		models.Job
+//	@Failure		401	{string}	message	"Unauthenticated"
+//	@Failure		404	{string}	message	"User not found"
 //	@Router			/api/employer/jobs [get]
 func GetJobsByEmployer(c *fiber.Ctx) error {
 	user := c.Locals("user").(models.Employer)
@@ -63,7 +75,7 @@ func GetJobsByEmployer(c *fiber.Ctx) error {
 
 	database.DB.Preload("Applications").Where("employer_id = ?", user.ID).Find(&jobs)
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"jobs": jobs}})
+	return c.JSON(fiber.Map{"data": fiber.Map{"jobs": jobs}})
 }
 
 

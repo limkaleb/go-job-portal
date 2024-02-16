@@ -11,10 +11,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// 	RegisterTalent	Register Talent
+// 	RegisterTalent	Register talent
 //	@Summary		Register talent
 //	@Tags			Talent
-//	@Description	Register talent
+//	@Description	Register as a talent.
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		models.TalentRegisterRequest	true	"Talent register request"
+//	@Success		201		{object}	models.TalentRegisterResponse
 //	@Router			/api/talent/register [post]
 func RegisterTalent(c *fiber.Ctx) error {
 	var data map[string]string
@@ -43,10 +47,18 @@ func RegisterTalent(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"talent": talent}})
 }
 
-// 	LoginTalent	Login Talent
-//	@Summary		Login talent
+// 	LoginTalent	Login a talent
+//	@Summary		Login a talent
 //	@Tags			Talent
-//	@Description	Login talent
+//	@Description	Login as a talent then generate JWT token, and store it inside cookies.
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		models.TalentLoginRequest	true	"Talent login request"
+//	@Success		200		{string}	status						ok
+//	@Failure		400		{string}	message						"Input an email"
+//	@Failure		401		{string}	message						"Incorrect password"
+//	@Failure		404		{string}	message						"User not found"
+//	@Failure		500		{string}	message						"Could not login"
 //	@Router			/api/talent/login [post]
 func LoginTalent(c *fiber.Ctx) error {
 	var data map[string]string
@@ -55,8 +67,14 @@ func LoginTalent(c *fiber.Ctx) error {
 		return err
 	}
 
-	var user models.Talent
+	if data["email"] == "" {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "input an email",
+		})
+	}
 
+	var user models.Talent
 	database.DB.Where("email = ?", data["email"]).First(&user)
 
 	if user.ID == 0 {
@@ -69,7 +87,7 @@ func LoginTalent(c *fiber.Ctx) error {
 	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(data["password"])); err != nil {
 		c.Status(fiber.StatusUnauthorized)
 		return c.JSON(fiber.Map{
-			"message": "incorrect password",
+			"message": "Incorrect password",
 		})
 	}
 
@@ -99,10 +117,12 @@ func LoginTalent(c *fiber.Ctx) error {
 	})
 }
 
-// 	LogoutTalent	Logout Talent
+// 	LogoutTalent	Logout talent
 //	@Summary		Logout talent
 //	@Tags			Talent
-//	@Description	Get talent data
+//	@Description	Logout talent
+//	@Produce		json
+//	@Success		200	{string}	status	ok
 //	@Router			/api/talent/logout [post]
 func LogoutTalent(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
@@ -119,9 +139,14 @@ func LogoutTalent(c *fiber.Ctx) error {
 }
 
 // 	GetTalent Get Talent
-//	@Summary		Get talent data
+//	@Summary		Get current talent data
 //	@Tags			Talent
-//	@Description	Get talent data
+//	@Description	Get current talent data
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	models.GetTalentResponse
+//	@Failure		401	{string}	message "Unauthenticated"
+//	@Failure		404	{string}	message "User not found"
 //	@Router			/api/talent [get]
 func GetTalent(c *fiber.Ctx) error {
 	user := c.Locals("user")

@@ -8,14 +8,14 @@ import (
 	"github.com/limkaleb/go-job-portal/middlewares"
 )
 
-func Setup(app *fiber.App) {	
+func Setup(app *fiber.App) {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
 			"status":  "success",
 			"message": "Welcome to Job Portal API",
 		})
 	})
-	
+
 	// Employer routes
 	app.Post("/api/employer/register", controllers.RegisterEmployer)
 	app.Post("/api/employer/login", controllers.LoginEmployer)
@@ -26,6 +26,7 @@ func Setup(app *fiber.App) {
 	app.Get("/api/employer/jobs", middlewares.EmployerAuthMiddleware, controllers.GetJobsByEmployer)
 	app.Get("/api/employer/applications", middlewares.EmployerAuthMiddleware, controllers.GetApplicationsByEmployer)
 	app.Put("/api/employer/applications/:id", middlewares.EmployerAuthMiddleware, controllers.UpdateApplicationByEmployer)
+	app.Get("/api/employer/applications/:id", middlewares.EmployerAuthMiddleware, controllers.EmployerGetApplicationById)
 
 	// Talent routes
 	app.Post("/api/talent/register", controllers.RegisterTalent)

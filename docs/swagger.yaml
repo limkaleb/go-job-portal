@@ -1,119 +1,684 @@
+definitions:
+  models.Application:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      job:
+        $ref: '#/definitions/models.Job'
+      job_id:
+        type: integer
+      status:
+        $ref: '#/definitions/models.Status'
+      submission_date:
+        type: string
+      talent:
+        $ref: '#/definitions/models.Talent'
+      talent_id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  models.ApplyJobResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      job_id:
+        type: integer
+      status:
+        $ref: '#/definitions/models.Status'
+      submission_date:
+        type: string
+      talent_id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  models.Employer:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      jobs:
+        items:
+          $ref: '#/definitions/models.Job'
+        type: array
+      name:
+        type: string
+      password:
+        items:
+          type: integer
+        type: array
+      updated_at:
+        type: string
+    type: object
+  models.EmployerLoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  models.EmployerRegisterRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  models.EmployerRegisterResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.GetEmployerResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      jobs:
+        items:
+          $ref: '#/definitions/models.Job'
+        type: array
+      name:
+        type: string
+    type: object
+  models.GetTalentResponse:
+    properties:
+      applications:
+        items:
+          $ref: '#/definitions/models.Application'
+        type: array
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Job:
+    properties:
+      applications:
+        items:
+          $ref: '#/definitions/models.Application'
+        type: array
+      created_at:
+        type: string
+      description:
+        type: string
+      employer:
+        $ref: '#/definitions/models.Employer'
+      employer_id:
+        type: integer
+      id:
+        type: integer
+      location:
+        type: string
+      salary:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.PostJobRequest:
+    properties:
+      description:
+        type: string
+      location:
+        type: string
+      salary:
+        type: string
+      title:
+        type: string
+    type: object
+  models.PostJobResponse:
+    properties:
+      description:
+        type: string
+      employer_id:
+        type: integer
+      id:
+        type: integer
+      location:
+        type: string
+      salary:
+        type: integer
+      title:
+        type: string
+    type: object
+  models.Status:
+    enum:
+    - applied
+    - interview
+    - accept
+    - reject
+    type: string
+    x-enum-varnames:
+    - Applied
+    - Interview
+    - Accept
+    - Reject
+  models.Talent:
+    properties:
+      applications:
+        items:
+          $ref: '#/definitions/models.Application'
+        type: array
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      password:
+        items:
+          type: integer
+        type: array
+      updated_at:
+        type: string
+    type: object
+  models.TalentLoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  models.TalentRegisterRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  models.TalentRegisterResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.UpdateApplicationRequest:
+    properties:
+      status:
+        $ref: '#/definitions/models.Status'
+    type: object
 info:
   contact: {}
-  description: This is a simple job portal API
+  description: The Simple Job Portal is an API-based platform designed to connect
+    job seekers (talents)
   termsOfService: http://swagger.io/terms/
   title: Job Portal API
   version: "1.0"
 paths:
   /api/applications:
     get:
-      description: Talent get applications
-      responses: {}
+      description: This endpoint is used for talent to get all their applications.
+        Need authentication to perform this action.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Application'
+            type: array
+        "401":
+          description: Unauthenticated
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
       summary: Talent get applications
       tags:
       - Talent
   /api/applications/{id}:
     get:
-      description: Talent get application by id
-      responses: {}
+      description: This endpoint is used for talent to get single application details.
+        Need authentication to perform this action.
+      parameters:
+      - description: Aplication id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Application'
+        "401":
+          description: Unauthenticated
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
       summary: Talent get application by id
       tags:
       - Talent
   /api/employer:
     get:
-      description: Get employer data
-      responses: {}
-      summary: Get employer data
+      consumes:
+      - application/json
+      description: Get current employer data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GetEmployerResponse'
+        "401":
+          description: Unauthenticated
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+      summary: Get current employer data
       tags:
       - Employer
   /api/employer/applications:
     get:
-      description: Employer get applications
-      responses: {}
+      description: This endpoint is used for employer to get all their job's applications.
+        Need authentication to perform this action.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Application'
+            type: array
+        "401":
+          description: Unauthenticated
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
       summary: Employer get applications
       tags:
       - Employer
   /api/employer/applications/{id}:
+    get:
+      description: This endpoint is used for employer to get single application details.
+        Need authentication to perform this action.
+      parameters:
+      - description: Aplication id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Application'
+        "401":
+          description: Unauthenticated
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+      summary: Employer get applications by id
+      tags:
+      - Employer
     put:
-      description: Employer update application status
-      responses: {}
+      consumes:
+      - application/json
+      description: This endpoint is used for employer to update application status.
+        Status can be "interview", "accept", or "reject". Need authentication to perform
+        this action.
+      parameters:
+      - description: Aplication id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update application request for employer
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateApplicationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Application'
+        "400":
+          description: Wrong status
+          schema:
+            type: string
+        "401":
+          description: Unauthenticated
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
       summary: Employer update application
       tags:
       - Employer
   /api/employer/jobs:
     get:
-      description: Employer get jobs
-      responses: {}
+      description: This endpoint is used for employer to fetch all jobs he/she posted.
+        Authentication needed to perform this action.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Job'
+            type: array
+        "401":
+          description: Unauthenticated
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
       summary: Employer get jobs
       tags:
       - Employer
   /api/employer/login:
     post:
-      description: Login employer
-      responses: {}
-      summary: Login employer
+      consumes:
+      - application/json
+      description: Login as an employer then generate JWT token, and store it inside
+        cookies.
+      parameters:
+      - description: Employer login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.EmployerLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Input an email
+          schema:
+            type: string
+        "401":
+          description: Incorrect password
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+        "500":
+          description: Could not login
+          schema:
+            type: string
+      summary: Login an employer
       tags:
       - Employer
   /api/employer/logout:
     post:
-      description: Get employer data
-      responses: {}
+      description: Logout employer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
       summary: Logout employer
       tags:
       - Employer
   /api/employer/register:
     post:
-      description: Register employer
-      responses: {}
-      summary: Register employer
+      consumes:
+      - application/json
+      description: Register as an employer
+      parameters:
+      - description: Employer register request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.EmployerRegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.EmployerRegisterResponse'
+      summary: Register an employer
       tags:
       - Employer
   /api/job:
     post:
-      description: Employer post new job
-      responses: {}
-      summary: Employer post job
+      consumes:
+      - application/json
+      description: This endpoint is used for employer to post a new job. Employer
+        must be authenticated to perform this action.
+      parameters:
+      - description: Post job request for employer
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.PostJobRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.PostJobResponse'
+        "401":
+          description: Unauthenticated
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+      summary: Post job for employer
       tags:
       - Employer
   /api/job/{job_id}/apply:
     post:
-      description: Apply job
-      responses: {}
+      consumes:
+      - application/json
+      description: This endpoint is used for talent to apply to a job posted. Need
+        authentication to perform this action.
+      parameters:
+      - description: Job id
+        in: path
+        name: job_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.ApplyJobResponse'
+        "401":
+          description: Unauthenticated
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
       summary: Apply Job
       tags:
       - Talent
   /api/jobs:
     get:
-      description: Get all jobs
-      responses: {}
+      description: This endpoint is used for talent to fetch all jobs posted. No authentication
+        needed to perform this action.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Job'
+            type: array
       summary: Get all jobs
       tags:
       - Talent
   /api/talent:
     get:
-      description: Get talent data
-      responses: {}
-      summary: Get talent data
+      consumes:
+      - application/json
+      description: Get current talent data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GetTalentResponse'
+        "401":
+          description: Unauthenticated
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+      summary: Get current talent data
       tags:
       - Talent
   /api/talent/login:
     post:
-      description: Login talent
-      responses: {}
-      summary: Login talent
+      consumes:
+      - application/json
+      description: Login as a talent then generate JWT token, and store it inside
+        cookies.
+      parameters:
+      - description: Talent login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.TalentLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Input an email
+          schema:
+            type: string
+        "401":
+          description: Incorrect password
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+        "500":
+          description: Could not login
+          schema:
+            type: string
+      summary: Login a talent
       tags:
       - Talent
   /api/talent/logout:
     post:
-      description: Get talent data
-      responses: {}
+      description: Logout talent
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
       summary: Logout talent
       tags:
       - Talent
   /api/talent/register:
     post:
-      description: Register talent
-      responses: {}
+      consumes:
+      - application/json
+      description: Register as a talent.
+      parameters:
+      - description: Talent register request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.TalentRegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.TalentRegisterResponse'
       summary: Register talent
       tags:
       - Talent

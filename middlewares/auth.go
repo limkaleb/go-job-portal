@@ -28,9 +28,9 @@ func EmployerAuthMiddleware(c *fiber.Ctx) error {
 	database.DB.Where("email = ?", claims.Issuer).First(&user)
 
 	if user.ID == 0 {
-		c.Status(fiber.StatusUnauthorized)
+		c.Status(fiber.StatusNotFound)
 		return c.JSON(fiber.Map{
-			"message": "user not found",
+			"message": "User not found",
 		})
 	}
 
@@ -60,9 +60,9 @@ func TalentAuthMiddleware(c *fiber.Ctx) error {
 	database.DB.Where("email = ?", claims.Issuer).First(&user)
 
 	if user.ID == 0 {
-		c.Status(fiber.StatusUnauthorized)
+		c.Status(fiber.StatusNotFound)
 		return c.JSON(fiber.Map{
-			"message": "user not found",
+			"message": "User not found",
 		})
 	}
 

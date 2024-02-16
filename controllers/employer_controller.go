@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -11,10 +12,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// 	RegisterEmployer	Register Employer
-//	@Summary		Register employer
+// RegisterEmployer Register an employer
+//	@Summary		Register an employer
 //	@Tags			Employer
-//	@Description	Register employer
+//	@Description	Register as an employer
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		models.EmployerRegisterRequest	true	"Employer register request"
+//	@Success		201		{object}	models.EmployerRegisterResponse
 //	@Router			/api/employer/register [post]
 func RegisterEmployer(c *fiber.Ctx) error {
 	var data map[string]string
@@ -35,18 +40,28 @@ func RegisterEmployer(c *fiber.Ctx) error {
 	result := database.DB.Create(&employer)
 
 	if result.Error != nil && strings.Contains(result.Error.Error(), "duplicate key value violates unique") {
-		return c.Status(fiber.StatusConflict).JSON(fiber.Map{"status": "fail", "message": "Email already exist!"})
+		return c.Status(fiber.StatusConflict).JSON(fiber.Map{"message": "Email already exist!"})
 	} else if result.Error != nil {
-		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": result.Error.Error()})
+		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"message": result.Error.Error()})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"employer": employer}})
+	employer.Password = []byte{}
+
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"data": fiber.Map{"employer": employer}})
 }
 
-// 	LoginEmployer	Login Employer
-//	@Summary		Login employer
+// LoginEmployer	Login an employer
+//	@Summary		Login an employer
 //	@Tags			Employer
-//	@Description	Login employer
+//	@Description	Login as an employer then generate JWT token, and store it inside cookies.
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		models.EmployerLoginRequest	true	"Employer login request"
+//	@Success		200		{string}	status						ok
+//	@Failure		400		{string}	message						"Input an email"
+//	@Failure		401		{string}	message						"Incorrect password"
+//	@Failure		404		{string}	message						"User not found"
+//	@Failure		500		{string}	message						"Could not login"
 //	@Router			/api/employer/login [post]
 func LoginEmployer(c *fiber.Ctx) error {
 	var data map[string]string
@@ -55,21 +70,29 @@ func LoginEmployer(c *fiber.Ctx) error {
 		return err
 	}
 
-	var user models.Employer
+	if data["email"] == "" {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Input an email",
+		})
+	}
 
+	var user models.Employer
 	database.DB.Where("email = ?", data["email"]).First(&user)
 
+	fmt.Println("usrrR: ", user.ID)
+
 	if user.ID == 0 {
-		c.Status(fiber.StatusUnauthorized)
+		c.Status(fiber.StatusNotFound)
 		return c.JSON(fiber.Map{
-			"message": "user not found",
+			"message": "User not found",
 		})
 	}
 
 	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(data["password"])); err != nil {
 		c.Status(fiber.StatusUnauthorized)
 		return c.JSON(fiber.Map{
-			"message": "incorrect password",
+			"message": "Incorrect password",
 		})
 	}
 
@@ -102,7 +125,9 @@ func LoginEmployer(c *fiber.Ctx) error {
 // 	LogoutEmployer	Logout Employer
 //	@Summary		Logout employer
 //	@Tags			Employer
-//	@Description	Get employer data
+//	@Description	Logout employer
+//	@Produce		json
+//	@Success		200	{string}	status	ok
 //	@Router			/api/employer/logout [post]
 func LogoutEmployer(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
@@ -119,9 +144,14 @@ func LogoutEmployer(c *fiber.Ctx) error {
 }
 
 // 	GetEmployer Get Employer
-//	@Summary		Get employer data
+//	@Summary		Get current employer data
 //	@Tags			Employer
-//	@Description	Get employer data
+//	@Description	Get current employer data
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	models.GetEmployerResponse
+//	@Failure		401	{string}	message	"Unauthenticated"
+//	@Failure		404	{string}	message	"User not found"
 //	@Router			/api/employer [get]
 func GetEmployer(c *fiber.Ctx) error {
 	user := c.Locals("user")
